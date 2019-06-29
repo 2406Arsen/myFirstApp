@@ -1,6 +1,6 @@
 import React from  'react';
 import Header from './components/common/Header';
-import Deatail from './components/detail/Detail';
+import List from './components/List/List';
 
 
 
@@ -8,7 +8,7 @@ const App = () => {
     return(
         <div>
            <Header /> 
-           <Deatail />
+            <List />
         </div>
     )
 }
