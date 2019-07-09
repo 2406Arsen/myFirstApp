@@ -1,5 +1,7 @@
 import React from 'react'
-import {handleResponse} from '../../helper'
+import Table from './Table'
+import Pagination from './Pagination'
+import {handleResponse} from '../../helper';
 import {API_URL} from '../../config'
 import './table.css'
 
@@ -11,21 +13,30 @@ class List extends React.Component {
             loading : false,
             currencies : [],
             error: null,
+            totalPages:0,
+            page:1,
         }
     }
+    
     componentDidMount(){
+        this.fetchCurrencies()
+    }
+    fetchCurrencies(){
         this.setState({
             loading:true
         })
-        fetch(`${API_URL}/cryptocurrencies?page=1&perPage=20`)
+        const {page} = this.state
+        fetch(`${API_URL}/cryptocurrencies?page=${page}&perPage=20`)
         .then(handleResponse)
-            .then((data) => {
-                this.setState({
-                    currencies:data.currencies,
-                    loading:false,
-                });
-            }
+        .then((data) => {  
+            this.setState({
+                currencies:data.currencies,
+                totalPages: data.totalPages,
+                loading:false,
+            });
+        }
         )
+    
     }
     renderChangePercent(percent){
         if(percent>0){
@@ -40,8 +51,19 @@ class List extends React.Component {
              return <span>{percent}</span>
         }
     }
+    handlePaginationClick = direction => {
+        let nextPage = this.state.page; 
+        nextPage = direction === 'next' ? nextPage + 1 : nextPage - 1;
+        this.setState({
+            page: nextPage,
+            
+        },()=>{this.fetchCurrencies()})
+        
+       
+    }
     render() {
-            const {loading, currencies, error} = this.state;//destrukturizacia;
+            const {loading, currencies, error,totalPages,page} = this.state;//destrukturizacia;
+           console.log(this.state);
            
             if(loading){
                 return (
@@ -51,42 +73,17 @@ class List extends React.Component {
                 )
             }
             return(
-                <div className="Table-container">
-                    <table className="Table">
-                        <thead className="Table-head">
-                            <tr>
-                                <th>Cryptocurrency</th>
-                                <th>Price</th>
-                                <th>Market Cap</th>
-                                <th>24H Change</th>
-                            </tr>   
-                    </thead>
-                    <tbody className="Table-body">
-                        {
-                            currencies.map(item=>{
-                              
-                                return(
-                                    <tr key={item.id}>
-                                        <td>
-                                            <span className="Table-rank">{item.rank}</span>
-                                            <span>{item.name}</span>
-                                        </td>
-                                        <td>
-                                            <span className="Table-dollar">${item.price}</span>
-                                        </td>
-                                        <td>
-                                            <span className="Table-dollar">${item.marketCap}</span>
-                                        </td>
-                                        <td>
-                                            {this.renderChangePercent(item.percentChange24h)}
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
+                <div >
+                    <Table
+                        currencies = {currencies} 
+                        renderChangePercent = {this.renderChangePercent}
 
-                    </table>
+                    />
+                    <Pagination 
+                        page = {page}
+                        totalPages = {totalPages}
+                        handlePaginationClick = {this.handlePaginationClick}
+                    />
                 </div>
             )
                
