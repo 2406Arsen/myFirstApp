@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Link} from 'react-router-dom'
 import './table.css'
 
 const Table = (props) => {
@@ -21,9 +21,12 @@ const Table = (props) => {
                       
                         return(
                             <tr key={item.id}>
+                               
                                 <td>
-                                    <span className="Table-rank">{item.rank}</span>
-                                    <span>{item.name}</span>
+                                    <Link to={`/currencie/${item.id}`}>
+                                        <span className="Table-rank">{item.rank}</span>
+                                        <span>{item.name}</span>
+                                    </Link>
                                 </td>
                                 <td>
                                     <span className="Table-dollar">${item.price}</span>
