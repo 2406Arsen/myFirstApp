@@ -12,7 +12,7 @@ const App = () => {
                     <Header />
                     <Switch>
                         <Route path='/' component={List} exact  />
-                        <Route path='/currencie/:id' component={Detail} />
+                        <Route path='/currency/:id' component={Detail} />
                         <Route component={NotFound}/>
 
                     </Switch>
