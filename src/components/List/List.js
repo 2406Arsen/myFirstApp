@@ -51,7 +51,9 @@ class List extends React.Component {
         
        
     }
-    render() {        
+    render() {  
+        console.log(this.props,'List props');
+              
             const {loading, currencies, error,totalPages,page} = this.state;//destrukturizacia;           
             if(loading){
                 return (

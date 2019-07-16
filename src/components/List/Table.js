@@ -1,13 +1,15 @@
 import React from 'react'
 import {withRouter} from 'react-router-dom'
 import {renderChangePercent} from '../../helper'
+import PropTypes from 'prop-types'
 import './table.css'
 
 const Table = (props) => {
-    console.log(props,'table');
+  
     
     
-    const {currencies,history} = props
+    const {currencies,history} = props;
+     console.log(props,'Table');
     return(
         <div className="Table-container">
             <table className="Table">
@@ -22,11 +24,13 @@ const Table = (props) => {
             <tbody className="Table-body">
                 {
                     currencies.map(item=>{
+                     
                       
                         return(
+                            
                             <tr 
                                 key={item.id}
-                                onClick={()=>history.push(`/currency/${item.id}`)}
+                                onClick={() => history.push(`/currencie/${item.id}`) }
                             >
                                
                                 <td>
