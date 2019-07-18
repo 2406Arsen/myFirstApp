@@ -30,7 +30,7 @@ const Table = (props) => {
                             
                             <tr 
                                 key={item.id}
-                                onClick={() => history.push(`/currencie/${item.id}`) }
+                                onClick={() => history.push(`/currency/${item.id}`) }
                             >
                                
                                 <td>
