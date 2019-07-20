@@ -9,23 +9,74 @@ class Search extends React.Component {
     constructor () {
         super ()
         this.state = {
+            searchResault:[],
             searchQuery : '',
+            loading:false
+            
         }
+        this.handleChange = this.handleChange.bind(this)
     }
 
-    handleChange = (event) => {
+    handleChange (event) {
         const searchQuery = event.target.value
+        this.setState({
+            searchQuery,
+        })
+        this.setState({
+            loading:true
+        })     
         
+        if(!searchQuery){
+            return '';
+        }
+
         fetch(`${API_URL}/autocomplete?searchQuery=${searchQuery}`)
         .then(handleResponse)
-        .then(result=>console.log(result))
+        .then(result => {
+            this.setState({
+                searchResault:result,
+                loading:false,
+            })
+        })
+  }
+  
+  
+    renderSearchResault () {
+        const {searchQuery,searchResault,loading} = this.state
+        if(!searchQuery){
+            return ''
+        }
+        if (searchResault.length>0) {
+            return (
+                <div className="Search-result-container">
+                    {
+                        searchResault.map(item => (
+                            <div 
+                                key = {item.id}
+                                className="Search-result"
+                            >
+                                {item.name}({item.symbol})
+                            </div>
+                        ) )
+                    }
+                </div>
+            )
+        }
         
+        return (
+            <div className="Search-result-container">
+                <div className="Search-no-result">No Result</div>
+            </div>  
+        )
+
     }
 
     render(){
+        const {loading,search} = this.state
+        
         return (
             <div className="Search">
-                <span classNam e="Search-icon"></span>
+                <span className="Search-icon"></span>
                 <input
                     className = "Search-input" 
                     type="text"
@@ -34,6 +85,13 @@ class Search extends React.Component {
                     placeholder = "Currency Name"
                     onChange = {this.handleChange}
                 />
+                  {
+                    loading &&  <div className="Search-loading">
+                                    <Loading  width="16px" height="16px"/>
+                                </div>
+                  }
+
+                {this.renderSearchResault()}
             </div>
         )
     }
