@@ -4,6 +4,7 @@ import {API_URL} from '../../config'
 import {handleResponse} from '../../helper'
 import './Search.css'
 import search from './search.png'
+import {withRouter} from 'react-router-dom'
 
 class Search extends React.Component {
     constructor () {
@@ -39,7 +40,16 @@ class Search extends React.Component {
             })
         })
   }
-  
+
+    handleRedirect(currencyID) {
+        console.log(currencyID);
+        this.props.history.push(`/currency/${currencyID}`)
+        this.setState({
+            searchQuery : '' ,
+            searchResault : []
+        })
+    }
+
   
     renderSearchResault () {
         const {searchQuery,searchResault,loading} = this.state
@@ -54,6 +64,7 @@ class Search extends React.Component {
                             <div 
                                 key = {item.id}
                                 className="Search-result"
+                                onClick={()=>this.handleRedirect(item.id)}
                             >
                                 {item.name}({item.symbol})
                             </div>
@@ -72,7 +83,9 @@ class Search extends React.Component {
     }
 
     render(){
-        const {loading,search} = this.state
+        console.log(this.props); 
+        
+        const {loading,searchQuery} = this.state
         
         return (
             <div className="Search">
@@ -84,6 +97,7 @@ class Search extends React.Component {
                     //ref = {(input) => this.searchQuery = input}
                     placeholder = "Currency Name"
                     onChange = {this.handleChange}
+                    value = {searchQuery}
                 />
                   {
                     loading &&  <div className="Search-loading">
@@ -97,4 +111,4 @@ class Search extends React.Component {
     }
 }
 
-export default Search;
+export default  withRouter(Search);
