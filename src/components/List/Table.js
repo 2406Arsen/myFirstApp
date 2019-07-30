@@ -60,4 +60,7 @@ const Table = (props) => {
  
 }
 
+    Table.propTypes = {
+        currencies:PropTypes.array.isRequired
+    }
 export default withRouter(Table);

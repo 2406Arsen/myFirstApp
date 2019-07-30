@@ -1,102 +1,80 @@
-import React from 'react'
-import {API_URL} from '../../config'
-import {handleResponse,renderChangePercent} from '../../helper'
-import Loading from '../common/Loading'
+import React from 'react';
+import { API_URL } from './../../config';
+import { handleResponse, renderChangePercent } from '../../helper';
+import { Link } from 'react-router-dom';
 import './Detail.css'
 
 class Detail extends React.Component {
-    constructor () {
-        super()
+    constructor() {
+        super();
         this.state = {
-            currency : {},
-            loading : false,
-            error : null
+            currency: {},
+            loading: false,
+            error: null
         }
     }
 
-    componentDidMount () {
-        const currencyId = this.props.match.params.id  
-        this.setState ({
-            loading :true
+    componentDidMount() {
+        const currencyId = this.props.match.params.id;
+        this.setState({
+            loading: true
         })
-        fetch(`${API_URL}/cryptocurrencies/${currencyId}`)
-        .then(handleResponse)
-        .then(currency => {
-            this.setState({
-                loading : false,
-                currency
-            })
-        })
-        .catch((error) => {
-            this.setState({
-                error:error.errorMessage,
-                loading:false
-            })
-        })
+        this.fetchCurrency(currencyId)
     }
-
-    render () {
-        const {currency,error,loading} =this.state
-        
-        if(loading){
-            return (
-                <div className='loading-container'>
-                    <Loading />
-                </div>
-            )
+    componentWillReceiveProps(nextProps) {
+        const newCurrencyId = nextProps.match.params.id;
+        this.fetchCurrency(newCurrencyId);
+    }
+    fetchCurrency(currencyId) {
+            fetch(`${API_URL}/cryptocurrencies/${currencyId}`)
+                .then(handleResponse)
+                .then(currency => {
+                    this.setState({
+                        loading: false,
+                        currency
+                    })
+                })
+                .catch(error => {
+                    this.setState({
+                        error: error.errorMessage,
+                        loading: false
+                    })
+                })
         }
-        if(error){
-            return(
-                <div className="error">
-                    {error}
-                </div>
-            )
-        }
 
+    
+    render() {
+        const { currency } = this.state;
         return (
             <div className="Detail">
-
                 <h1 className="Detail-heading">
-                    {currency.name} ({currency.symbol})
+                    {currency.name}
+
                 </h1>
-
-
                 <div className="Detail-container">
-
                     <div className="Detail-item">
-                        Price <span className="Detail-value">$ {currency.price}</span>
+                        Rank<span className="Detail-value">{currency.rank} </span>
                     </div>
-
                     <div className="Detail-item">
-                        Rank <span className="Detail-value">{currency.rank}</span>
+                        Price<span className="Detail-value">$ {currency.price} </span>
                     </div>
-
                     <div className="Detail-item">
-                        24H Change
-                        <span className="Detail-value">{renderChangePercent(currency.percentChange24h)}</span>
+                        Volume 24 Hour<span className="Detail-value">{currency.volume24h} </span>
                     </div>
-
                     <div className="Detail-item">
-                        <span className="Detail-title">Market cap</span>
-                        <span className="Detail-dollar">$</span>
-                        {currency.marketCap}
+                        Market Cap<span className="Detail-value">$ {currency.marketCap} </span>
                     </div>
-
                     <div className="Detail-item">
-                        <span className="Detail-title">24H Volume</span>
-                        <span className="Detail-dollar">$</span>
-                        {currency.volume24h}
+                        Total Supply<span className="Detail-value">$ {currency.totalSupply} </span>
                     </div>
-
                     <div className="Detail-item">
-                        <span className="Detail-title">Total supply</span>
-                        {currency.totalSupply}
+                        Percent Change 24 Hour <span className="Detail-value">{renderChangePercent(currency.percentChange24h)} </span>
                     </div>
-
                 </div>
+                <Link to="/" className="Detail-link"> <em> Go Back </em> </Link>
             </div>
         )
     }
 }
 
-export default Detail
+export default Detail;
